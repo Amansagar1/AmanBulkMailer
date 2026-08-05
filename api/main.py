@@ -124,7 +124,7 @@ def process_file(server, file_path, resume_path=None, campaign_id=None, subject_
         normalized_row = {str(k).replace('\ufeff', '').strip().lower(): v for k, v in row.items()}
         
         # Dynamically find the company name column
-        company_name = 'Hiring Team'
+        company_name = ''
         for col_variant in ['company name', 'company', 'organization', 'startup name', 'startup', 'employer']:
             if col_variant in normalized_row and str(normalized_row[col_variant]).strip().lower() != 'nan':
                 company_name = str(normalized_row[col_variant]).strip()
