@@ -10,7 +10,12 @@ const getApiUrl = () => {
 
 export const fetchCampaignHistory = async () => {
   const apiUrl = getApiUrl();
-  const res = await fetch(`${apiUrl}/api/history`);
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${apiUrl}/api/history`, {
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  });
   
   if (!res.ok) {
     throw new Error(`Error fetching history: ${res.statusText}`);
@@ -37,7 +42,8 @@ export const uploadCampaignAssets = async (formData) => {
 
 export const buildProcessEventUrl = (filePath, resumePath, templatePath) => {
   const apiUrl = getApiUrl();
-  let eventUrl = `${apiUrl}/api/process?filePath=${encodeURIComponent(filePath)}`;
+  const token = localStorage.getItem("token");
+  let eventUrl = `${apiUrl}/api/process?filePath=${encodeURIComponent(filePath)}&token=${encodeURIComponent(token)}`;
   
   if (resumePath) {
     eventUrl += `&resumePath=${encodeURIComponent(resumePath)}`;

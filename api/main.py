@@ -156,7 +156,7 @@ def process_file(server, file_path, resume_path=None, campaign_id=None, subject_
 
     yield f'{{"status": "complete", "message": "Done! Successfully sent emails."}}\n\n'
 
-def process_uploaded_file(file_path, resume_path=None, subject_template=None, body_template=None, sender_email=None, sender_password=None):
+def process_uploaded_file(file_path, resume_path=None, subject_template=None, body_template=None, sender_email=None, sender_password=None, user_email=None):
     campaign_id = str(uuid.uuid4())
     
     if mongo_client:
@@ -165,7 +165,8 @@ def process_uploaded_file(file_path, resume_path=None, subject_template=None, bo
                 "campaign_id": campaign_id,
                 "file_name": os.path.basename(file_path),
                 "timestamp": datetime.utcnow(),
-                "status": "Running"
+                "status": "Running",
+                "user_email": user_email
             })
         except Exception as e:
             print(f"Campaign logging error: {e}")

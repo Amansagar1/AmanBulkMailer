@@ -71,6 +71,15 @@ def process():
     file_path = request.args.get('filePath')
     resume_path = request.args.get('resumePath')
     template_path = request.args.get('templatePath')
+    token = request.args.get('token')
+    
+    if not token:
+        return jsonify({"error": "No token provided"}), 401
+    
+    session = sessions_col.find_one({"token": token})
+    if not session:
+        return jsonify({"error": "Invalid token"}), 401
+    user_email = session['email']
     
     if not file_path or not os.path.exists(file_path):
         return jsonify({"error": "File not found"}), 400
@@ -92,7 +101,7 @@ def process():
         
     def generate():
         try:
-            for progress_update in process_uploaded_file(file_path, resume_path, subject_template, body_template, sender_email, sender_password):
+            for progress_update in process_uploaded_file(file_path, resume_path, subject_template, body_template, sender_email, sender_password, user_email):
                 # Ensure the update is stripped of extra newlines and formatted for SSE
                 clean_update = progress_update.strip()
                 yield f"data: {clean_update}\n\n"
@@ -106,7 +115,17 @@ def history():
     if campaigns_col is None:
         return jsonify({"error": "MongoDB not connected"}), 500
         
-    campaigns = list(campaigns_col.find().sort("timestamp", -1).limit(20))
+    token = request.headers.get('Authorization')
+    if not token:
+        return jsonify({"error": "No token provided"}), 401
+        
+    token = token.replace("Bearer ", "")
+    session = sessions_col.find_one({"token": token})
+    if not session:
+        return jsonify({"error": "Invalid token"}), 401
+    user_email = session['email']
+        
+    campaigns = list(campaigns_col.find({"user_email": user_email}).sort("timestamp", -1).limit(20))
     for c in campaigns:
         c['_id'] = str(c['_id'])
         c['timestamp'] = c['timestamp'].isoformat()
