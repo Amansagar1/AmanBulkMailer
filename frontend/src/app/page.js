@@ -25,6 +25,7 @@ export default function Home() {
   const [authMobile, setAuthMobile] = useState("");
   const [authError, setAuthError] = useState("");
   const [authLoading, setAuthLoading] = useState(true);
+  const [userName, setUserName] = useState("");
   const [touched, setTouched] = useState({});
 
   const handleBlur = (field) => {
@@ -268,6 +269,7 @@ GitHub: https://github.com/Amansagar1`);
       const user = await fetchMe(data.token);
       setSenderEmail(user.senderEmail || "");
       setSenderPassword(user.senderPassword || "");
+      setUserName(user.name || "User");
       setIsLoggedIn(true);
     } catch (err) {
       setAuthError(err.message);
@@ -283,6 +285,7 @@ GitHub: https://github.com/Amansagar1`);
     setAuthName("");
     setAuthCompany("");
     setAuthMobile("");
+    setUserName("");
     setSenderEmail("");
     setSenderPassword("");
   };
@@ -432,7 +435,7 @@ GitHub: https://github.com/Amansagar1`);
         <div className="flex items-center gap-4">
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20">
               <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></div>
-              <span className="text-[10px] font-medium text-blue-400 tracking-wider">Aman's Workspace</span>
+              <span className="text-[10px] font-medium text-blue-400 tracking-wider">{userName ? `${userName}'s Workspace` : "Workspace"}</span>
             </div>
             <button onClick={handleLogout} className="px-4 py-2 rounded-xl text-xs font-semibold text-white/70 bg-white/5 hover:bg-white/10 border border-white/5 hover:text-white transition-all">
               Log Out
