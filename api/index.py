@@ -6,7 +6,10 @@ import os
 import json
 import uuid
 import datetime
-from main import process_uploaded_file, campaigns_col, logs_col, users_col, sessions_col
+try:
+    from main import process_uploaded_file, campaigns_col, logs_col, users_col, sessions_col
+except ModuleNotFoundError:
+    from api.main import process_uploaded_file, campaigns_col, logs_col, users_col, sessions_col
 
 app = Flask(__name__)
 CORS(app)
