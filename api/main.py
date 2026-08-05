@@ -120,18 +120,21 @@ def process_file(server, file_path, resume_path=None, campaign_id=None, subject_
     yield f'{{"status": "info", "message": "Started processing {total_rows} rows..."}}\n\n'
 
     for index, row in df.iterrows():
+        # Normalize column names in this row to handle BOM, spaces, and casing
+        normalized_row = {str(k).replace('\ufeff', '').strip().lower(): v for k, v in row.items()}
+        
         # Dynamically find the company name column
         company_name = 'Hiring Team'
-        for col in ['Company Name', 'Company', 'Organization', 'Startup Name', 'Startup', 'Employer']:
-            if col in row and str(row[col]).strip() != 'nan':
-                company_name = str(row[col]).strip()
+        for col_variant in ['company name', 'company', 'organization', 'startup name', 'startup', 'employer']:
+            if col_variant in normalized_row and str(normalized_row[col_variant]).strip().lower() != 'nan':
+                company_name = str(normalized_row[col_variant]).strip()
                 break
         
         # Dynamically find the job role column
         job_role = 'Software Engineer'
-        for col in ['Target Role', 'Roles Hiring', 'Role', 'Job Title', 'Position']:
-            if col in row and str(row[col]).strip() != 'nan':
-                job_role = str(row[col]).strip()
+        for col_variant in ['target role', 'roles hiring', 'role', 'job title', 'position']:
+            if col_variant in normalized_row and str(normalized_row[col_variant]).strip().lower() != 'nan':
+                job_role = str(normalized_row[col_variant]).strip()
                 break
         recipient_email = get_valid_email(row)
 
