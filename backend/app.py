@@ -186,9 +186,10 @@ def get_me():
         return jsonify({"error": "User not found"}), 404
         
     return jsonify({
-        "email": user["email"],
-        "senderEmail": user["senderEmail"],
-        "senderPassword": user["senderPassword"]
+        "email": user.get("email"),
+        "senderEmail": user.get("senderEmail"),
+        "senderPassword": user.get("senderPassword"),
+        "name": user.get("name")
     }), 200
 
 if __name__ == '__main__':
