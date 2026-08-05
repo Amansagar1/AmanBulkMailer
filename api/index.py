@@ -11,7 +11,8 @@ from main import process_uploaded_file, campaigns_col, logs_col, users_col, sess
 app = Flask(__name__)
 CORS(app)
 
-UPLOAD_FOLDER = 'uploads'
+import tempfile
+UPLOAD_FOLDER = os.path.join(tempfile.gettempdir(), 'uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
