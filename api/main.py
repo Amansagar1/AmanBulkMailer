@@ -120,7 +120,12 @@ def process_file(server, file_path, resume_path=None, campaign_id=None, subject_
     yield f'{{"status": "info", "message": "Started processing {total_rows} rows..."}}\n\n'
 
     for index, row in df.iterrows():
-        company_name = str(row.get('Company Name', 'Hiring Team')).strip()
+        # Dynamically find the company name column
+        company_name = 'Hiring Team'
+        for col in ['Company Name', 'Company', 'Organization', 'Startup Name', 'Startup', 'Employer']:
+            if col in row and str(row[col]).strip() != 'nan':
+                company_name = str(row[col]).strip()
+                break
         
         # Dynamically find the job role column
         job_role = 'Software Engineer'
