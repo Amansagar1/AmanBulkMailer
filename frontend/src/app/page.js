@@ -15,6 +15,7 @@ export default function Home() {
   const [senderEmail, setSenderEmail] = useState("");
   const [senderPassword, setSenderPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showAuthPassword, setShowAuthPassword] = useState(false);
   
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authMode, setAuthMode] = useState("login");
@@ -325,7 +326,10 @@ GitHub: https://github.com/Amansagar1`);
                 </div>
                 <div className="space-y-1">
                   <label className="text-[10px] font-medium text-[#a1a1aa] uppercase tracking-wider">Platform Password</label>
-                  <input type="password" required value={authPassword} onChange={e => setAuthPassword(e.target.value)} onBlur={() => handleBlur('authPassword')} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all font-mono" />
+                  <div className="relative">
+                    <input type={showAuthPassword ? "text" : "password"} required value={authPassword} onChange={e => setAuthPassword(e.target.value)} onBlur={() => handleBlur('authPassword')} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all font-mono" />
+                    <button type="button" onClick={() => setShowAuthPassword(!showAuthPassword)} className="absolute right-3 top-3 text-[#666] hover:text-white text-xs">{showAuthPassword ? "Hide" : "Show"}</button>
+                  </div>
                   {renderHint("authPassword", authPassword)}
                 </div>
               </>
@@ -341,7 +345,10 @@ GitHub: https://github.com/Amansagar1`);
                     </div>
                     <div className="space-y-1">
                       <label className="text-[10px] font-medium text-[#a1a1aa] uppercase tracking-wider">Platform Password</label>
-                      <input type="password" required value={authPassword} onChange={e => setAuthPassword(e.target.value)} onBlur={() => handleBlur('authPassword')} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all font-mono" />
+                      <div className="relative">
+                        <input type={showAuthPassword ? "text" : "password"} required value={authPassword} onChange={e => setAuthPassword(e.target.value)} onBlur={() => handleBlur('authPassword')} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all font-mono" />
+                        <button type="button" onClick={() => setShowAuthPassword(!showAuthPassword)} className="absolute right-3 top-3 text-[#666] hover:text-white text-xs">{showAuthPassword ? "Hide" : "Show"}</button>
+                      </div>
                       {renderHint("authPassword", authPassword)}
                     </div>
                   </div>
@@ -377,7 +384,10 @@ GitHub: https://github.com/Amansagar1`);
                     </div>
                     <div className="space-y-1">
                       <label className="text-[10px] font-medium text-[#a1a1aa] uppercase tracking-wider">Sender App Password</label>
-                      <input type="password" required value={senderPassword} onChange={e => setSenderPassword(e.target.value)} onBlur={() => handleBlur('senderPassword')} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500/50 transition-all font-mono" />
+                      <div className="relative">
+                        <input type={showPassword ? "text" : "password"} required value={senderPassword} onChange={e => setSenderPassword(e.target.value)} onBlur={() => handleBlur('senderPassword')} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500/50 transition-all font-mono" />
+                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-3 text-[#666] hover:text-white text-xs">{showPassword ? "Hide" : "Show"}</button>
+                      </div>
                       {renderHint("senderPassword", senderPassword)}
                       <p className="text-[10px] text-[#666] mt-1">Stored securely to auto-fill for future campaigns.</p>
                     </div>
