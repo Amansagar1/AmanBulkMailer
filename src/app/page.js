@@ -379,7 +379,13 @@ GitHub: https://github.com/Amansagar1`);
                       <label className="text-[10px] font-medium text-[#a1a1aa] uppercase tracking-wider">Sender App Password</label>
                       <input type="password" required value={senderPassword} onChange={e => setSenderPassword(e.target.value)} onBlur={() => handleBlur('senderPassword')} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500/50 transition-all font-mono" />
                       {renderHint("senderPassword", senderPassword)}
-                      <p className="text-[10px] text-[#666] mt-1">Stored securely to auto-fill for future campaigns.</p>
+                      <div className="mt-1 flex flex-col gap-1">
+                        <p className="text-[10px] text-[#666]">Stored securely to auto-fill for future campaigns.</p>
+                        <a href="https://support.google.com/accounts/answer/185833?hl=en" target="_blank" rel="noopener noreferrer" className="text-[10px] text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center gap-1 w-fit">
+                          How to generate a Google App Password?
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -484,6 +490,10 @@ GitHub: https://github.com/Amansagar1`);
                   </button>
                   {renderHint("senderPassword", senderPassword)}
                 </div>
+                <a href="https://support.google.com/accounts/answer/185833?hl=en" target="_blank" rel="noopener noreferrer" className="text-[10px] text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center gap-1 w-fit mt-1">
+                  How to generate a Google App Password?
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                </a>
               </div>
 
               {/* CSV Upload */}
