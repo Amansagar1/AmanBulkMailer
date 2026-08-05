@@ -3,6 +3,12 @@
 import { useState, useRef, useEffect } from "react";
 import { fetchCampaignHistory, uploadCampaignAssets, buildProcessEventUrl, loginUser, signupUser, fetchMe } from "../services/api";
 
+const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const validatePassword = (password) => /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(password);
+const validateMobile = (mobile) => !mobile || /^\+?\d{10,15}$/.test(mobile.replace(/[-\s]/g, ''));
+const validateName = (name) => name.trim().length >= 2 && !/\d/.test(name);
+const validateAppPassword = (password) => password.length >= 8;
+
 export default function Home() {
   const [dataFile, setDataFile] = useState(null);
   const [resumeFile, setResumeFile] = useState(null);
@@ -19,6 +25,40 @@ export default function Home() {
   const [authMobile, setAuthMobile] = useState("");
   const [authError, setAuthError] = useState("");
   const [authLoading, setAuthLoading] = useState(true);
+  const [touched, setTouched] = useState({});
+
+  const handleBlur = (field) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
+  const getHint = (field, value) => {
+    if (!touched[field] && !value) return null; // Don't show hint if empty and untouched
+    switch (field) {
+      case "authEmail":
+      case "senderEmail":
+        return validateEmail(value) ? { ok: true, msg: "✅ Valid email format" } : { ok: false, msg: "❌ Invalid email format" };
+      case "authPassword":
+        if (!value) return { ok: false, msg: "❌ Password is required" };
+        if (!validatePassword(value)) return { ok: false, msg: "❌ Min 8 chars, 1 letter, 1 number, 1 symbol" };
+        return { ok: true, msg: "✅ Strong password" };
+      case "authName":
+        return validateName(value) ? { ok: true, msg: "✅ Looks good" } : { ok: false, msg: "❌ Minimum 2 letters, no numbers" };
+      case "authMobile":
+        if (!value) return null; // Optional
+        return validateMobile(value) ? { ok: true, msg: "✅ Valid format" } : { ok: false, msg: "❌ 10-15 digits allowed" };
+      case "senderPassword":
+        if (!value) return { ok: false, msg: "❌ App Password is required" };
+        return validateAppPassword(value) ? { ok: true, msg: "✅ Valid length" } : { ok: false, msg: "❌ Usually 16 characters" };
+      default:
+        return null;
+    }
+  };
+
+  const renderHint = (field, value) => {
+    const hint = getHint(field, value);
+    if (!hint) return null;
+    return <p className={`text-[10px] mt-1 ${hint.ok ? 'text-emerald-400' : 'text-red-400'}`}>{hint.msg}</p>;
+  };
   const [subjectTemplate, setSubjectTemplate] = useState("Application for {role} - Kumar Aman Sagar");
   const [bodyTemplate, setBodyTemplate] = useState(`Dear Hiring Team at {company},
 
@@ -277,11 +317,13 @@ GitHub: https://github.com/Amansagar1`);
               <>
                 <div className="space-y-1">
                   <label className="text-[10px] font-medium text-[#a1a1aa] uppercase tracking-wider">Platform Email</label>
-                  <input type="email" required value={authEmail} onChange={e => setAuthEmail(e.target.value)} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all placeholder:text-[#555]" />
+                  <input type="email" required value={authEmail} onChange={e => setAuthEmail(e.target.value)} onBlur={() => handleBlur('authEmail')} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all placeholder:text-[#555]" />
+                  {renderHint("authEmail", authEmail)}
                 </div>
                 <div className="space-y-1">
                   <label className="text-[10px] font-medium text-[#a1a1aa] uppercase tracking-wider">Platform Password</label>
-                  <input type="password" required value={authPassword} onChange={e => setAuthPassword(e.target.value)} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all font-mono" />
+                  <input type="password" required value={authPassword} onChange={e => setAuthPassword(e.target.value)} onBlur={() => handleBlur('authPassword')} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all font-mono" />
+                  {renderHint("authPassword", authPassword)}
                 </div>
               </>
             ) : (
@@ -291,11 +333,13 @@ GitHub: https://github.com/Amansagar1`);
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-1">
                       <label className="text-[10px] font-medium text-[#a1a1aa] uppercase tracking-wider">Platform Email</label>
-                      <input type="email" required value={authEmail} onChange={e => setAuthEmail(e.target.value)} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all placeholder:text-[#555]" />
+                      <input type="email" required value={authEmail} onChange={e => setAuthEmail(e.target.value)} onBlur={() => handleBlur('authEmail')} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all placeholder:text-[#555]" />
+                      {renderHint("authEmail", authEmail)}
                     </div>
                     <div className="space-y-1">
                       <label className="text-[10px] font-medium text-[#a1a1aa] uppercase tracking-wider">Platform Password</label>
-                      <input type="password" required value={authPassword} onChange={e => setAuthPassword(e.target.value)} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all font-mono" />
+                      <input type="password" required value={authPassword} onChange={e => setAuthPassword(e.target.value)} onBlur={() => handleBlur('authPassword')} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all font-mono" />
+                      {renderHint("authPassword", authPassword)}
                     </div>
                   </div>
                 </div>
@@ -305,11 +349,13 @@ GitHub: https://github.com/Amansagar1`);
                   <div className="space-y-3">
                     <div className="space-y-1">
                       <label className="text-[10px] font-medium text-[#a1a1aa] uppercase tracking-wider">Full Name</label>
-                      <input type="text" required value={authName} onChange={e => setAuthName(e.target.value)} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all placeholder:text-[#555]" />
+                      <input type="text" required value={authName} onChange={e => setAuthName(e.target.value)} onBlur={() => handleBlur('authName')} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all placeholder:text-[#555]" />
+                      {renderHint("authName", authName)}
                     </div>
                     <div className="space-y-1">
                       <label className="text-[10px] font-medium text-[#a1a1aa] uppercase tracking-wider">Mobile Number</label>
-                      <input type="tel" value={authMobile} onChange={e => setAuthMobile(e.target.value)} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all placeholder:text-[#555]" />
+                      <input type="tel" value={authMobile} onChange={e => setAuthMobile(e.target.value)} onBlur={() => handleBlur('authMobile')} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all placeholder:text-[#555]" />
+                      {renderHint("authMobile", authMobile)}
                     </div>
                     <div className="space-y-1">
                       <label className="text-[10px] font-medium text-[#a1a1aa] uppercase tracking-wider">Company (Optional)</label>
@@ -323,11 +369,13 @@ GitHub: https://github.com/Amansagar1`);
                   <div className="space-y-3">
                     <div className="space-y-1">
                       <label className="text-[10px] font-medium text-[#a1a1aa] uppercase tracking-wider">Sender App Email (e.g. Gmail)</label>
-                      <input type="email" required value={senderEmail} onChange={e => setSenderEmail(e.target.value)} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500/50 transition-all" />
+                      <input type="email" required value={senderEmail} onChange={e => setSenderEmail(e.target.value)} onBlur={() => handleBlur('senderEmail')} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500/50 transition-all" />
+                      {renderHint("senderEmail", senderEmail)}
                     </div>
                     <div className="space-y-1">
                       <label className="text-[10px] font-medium text-[#a1a1aa] uppercase tracking-wider">Sender App Password</label>
-                      <input type="password" required value={senderPassword} onChange={e => setSenderPassword(e.target.value)} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500/50 transition-all font-mono" />
+                      <input type="password" required value={senderPassword} onChange={e => setSenderPassword(e.target.value)} onBlur={() => handleBlur('senderPassword')} className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500/50 transition-all font-mono" />
+                      {renderHint("senderPassword", senderPassword)}
                       <p className="text-[10px] text-[#666] mt-1">Stored securely to auto-fill for future campaigns.</p>
                     </div>
                   </div>
@@ -407,17 +455,22 @@ GitHub: https://github.com/Amansagar1`);
               {/* Sender Credentials */}
               <div className="space-y-4">
                 <label className="text-[10px] font-medium text-[#a1a1aa] uppercase tracking-wider">Sender Account</label>
-                <input 
-                  type="email" 
-                  value={senderEmail}
-                  onChange={(e) => setSenderEmail(e.target.value)}
-                  className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all placeholder:text-[#555]"
-                />
+                <div>
+                  <input 
+                    type="email" 
+                    value={senderEmail}
+                    onChange={(e) => setSenderEmail(e.target.value)}
+                    onBlur={() => handleBlur('senderEmail')}
+                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all placeholder:text-[#555]"
+                  />
+                  {renderHint("senderEmail", senderEmail)}
+                </div>
                 <div className="relative">
                   <input 
                     type={showPassword ? "text" : "password"}
                     value={senderPassword}
                     onChange={(e) => setSenderPassword(e.target.value)}
+                    onBlur={() => handleBlur('senderPassword')}
                     className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all font-mono"
                   />
                   <button 
@@ -426,6 +479,7 @@ GitHub: https://github.com/Amansagar1`);
                   >
                     {showPassword ? "Hide" : "Show"}
                   </button>
+                  {renderHint("senderPassword", senderPassword)}
                 </div>
               </div>
 
