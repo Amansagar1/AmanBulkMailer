@@ -53,12 +53,16 @@ Best regards,
 Kumar Aman Sagar"""
 # ==========================================
 
+import re
+
 def get_valid_email(row):
-    """Helper function to find a valid email address from the available columns."""
-    for col in ['HR Email', 'Recruiter Email', 'Careers Email', 'Office Email', 'Direct Contact / Email Pattern', 'Recruiter Email Pattern']:
-        email = str(row.get(col, '')).strip()
-        if email and email.lower() != 'nan' and email.lower() != 'not publicly available':
-            return email
+    """Helper function to find a valid email address by checking all columns."""
+    for col_name, value in row.items():
+        val_str = str(value).strip()
+        # Basic email validation regex
+        if re.match(r"[^@]+@[^@]+\.[^@]+", val_str):
+            if val_str.lower() != 'nan' and val_str.lower() != 'not publicly available':
+                return val_str
     return None
 
 def log_to_mongo(campaign_id, company, email, role, status, message=None):
@@ -117,7 +121,13 @@ def process_file(server, file_path, resume_path=None, campaign_id=None, subject_
 
     for index, row in df.iterrows():
         company_name = str(row.get('Company Name', 'Hiring Team')).strip()
-        job_role = str(row.get('Target Role', 'Software Engineer')).strip()
+        
+        # Dynamically find the job role column
+        job_role = 'Software Engineer'
+        for col in ['Target Role', 'Roles Hiring', 'Role', 'Job Title', 'Position']:
+            if col in row and str(row[col]).strip() != 'nan':
+                job_role = str(row[col]).strip()
+                break
         recipient_email = get_valid_email(row)
 
         if not recipient_email:
