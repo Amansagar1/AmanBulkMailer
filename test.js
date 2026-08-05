@@ -1,0 +1,1 @@
+const formData = new FormData(); formData.append('file', new Blob(['test']), 'test.csv'); formData.append('resume', new Blob(['test']), 'test.pdf'); fetch('http://127.0.0.1:5000/api/upload', {method: 'POST', body: formData}).then(r= 
