@@ -6,6 +6,9 @@ import os
 import json
 import uuid
 import datetime
+import sys
+sys.path.append(os.path.dirname(__file__))
+
 try:
     from main import process_uploaded_file, campaigns_col, logs_col, users_col, sessions_col
 except ModuleNotFoundError:
