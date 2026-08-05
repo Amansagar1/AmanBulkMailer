@@ -1,6 +1,0 @@
-Flask
-flask-cors
-pymongo
-pandas
-openpyxl
-werkzeug
