@@ -194,6 +194,27 @@ GitHub: https://github.com/Amansagar1`);
   const handleAuth = async (e) => {
     e.preventDefault();
     setAuthError("");
+    
+    if (authPassword.length < 6) {
+      setAuthError("Platform password must be at least 6 characters.");
+      return;
+    }
+    
+    if (authMode === "signup") {
+      if (authName.trim().length < 2) {
+        setAuthError("Please provide a valid full name.");
+        return;
+      }
+      if (authMobile && !/^\+?\d{10,15}$/.test(authMobile.replace(/[-\s]/g, ''))) {
+        setAuthError("Please provide a valid mobile number.");
+        return;
+      }
+      if (senderPassword.length < 8) {
+        setAuthError("Sender App Password seems too short to be a valid App Password (usually 16 characters).");
+        return;
+      }
+    }
+
     setAuthLoading(true);
     try {
       let data;
