@@ -115,6 +115,9 @@ def history():
 
 @app.route('/api/signup', methods=['POST'])
 def signup():
+    if users_col is None:
+        return jsonify({"error": "Database not connected. Please set MONGO_URI."}), 500
+        
     data = request.json
     email = data.get('email')
     password = data.get('password')
@@ -154,6 +157,9 @@ def signup():
 
 @app.route('/api/login', methods=['POST'])
 def login():
+    if users_col is None:
+        return jsonify({"error": "Database not connected. Please set MONGO_URI."}), 500
+        
     data = request.json
     email = data.get('email')
     password = data.get('password')

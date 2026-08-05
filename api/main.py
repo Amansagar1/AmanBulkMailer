@@ -16,13 +16,20 @@ SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
 MONGO_URI = os.getenv("MONGO_URI")
 
 # MongoDB Setup
+mongo_client = None
+campaigns_col = None
+logs_col = None
+users_col = None
+sessions_col = None
+
 try:
-    mongo_client = MongoClient(MONGO_URI)
-    db = mongo_client['email_automation']
-    campaigns_col = db['campaigns']
-    logs_col = db['email_logs']
-    users_col = db['users']
-    sessions_col = db['sessions']
+    if MONGO_URI:
+        mongo_client = MongoClient(MONGO_URI)
+        db = mongo_client['email_automation']
+        campaigns_col = db['campaigns']
+        logs_col = db['email_logs']
+        users_col = db['users']
+        sessions_col = db['sessions']
 except Exception as e:
     print(f"MongoDB connection error: {e}")
     mongo_client = None
