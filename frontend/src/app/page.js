@@ -38,19 +38,19 @@ export default function Home() {
     switch (field) {
       case "authEmail":
       case "senderEmail":
-        return validateEmail(value) ? { ok: true, msg: "✅ Valid email format" } : { ok: false, msg: "❌ Invalid email format" };
+        return validateEmail(value) ? { ok: true, msg: "Valid email format" } : { ok: false, msg: "Invalid email format" };
       case "authPassword":
-        if (!value) return { ok: false, msg: "❌ Password is required" };
-        if (!validatePassword(value)) return { ok: false, msg: "❌ Min 8 chars, 1 letter, 1 number, 1 symbol" };
-        return { ok: true, msg: "✅ Strong password" };
+        if (!value) return { ok: false, msg: "Password is required" };
+        if (!validatePassword(value)) return { ok: false, msg: "Min 8 chars, 1 letter, 1 number, 1 symbol" };
+        return { ok: true, msg: "Strong password" };
       case "authName":
-        return validateName(value) ? { ok: true, msg: "✅ Looks good" } : { ok: false, msg: "❌ Minimum 2 letters, no numbers" };
+        return validateName(value) ? { ok: true, msg: "Looks good" } : { ok: false, msg: "Minimum 2 letters, no numbers" };
       case "authMobile":
         if (!value) return null; // Optional
-        return validateMobile(value) ? { ok: true, msg: "✅ Valid format" } : { ok: false, msg: "❌ 10-15 digits allowed" };
+        return validateMobile(value) ? { ok: true, msg: "Valid format" } : { ok: false, msg: "10-15 digits allowed" };
       case "senderPassword":
-        if (!value) return { ok: false, msg: "❌ App Password is required" };
-        return validateAppPassword(value) ? { ok: true, msg: "✅ Valid length" } : { ok: false, msg: "❌ Usually 16 characters" };
+        if (!value) return { ok: false, msg: "App Password is required" };
+        return validateAppPassword(value) ? { ok: true, msg: "Valid length" } : { ok: false, msg: "Usually 16 characters" };
       default:
         return null;
     }
