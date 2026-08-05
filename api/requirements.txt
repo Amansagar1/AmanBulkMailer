@@ -4,3 +4,4 @@ pymongo
 pandas
 openpyxl
 werkzeug
+python-dotenv
